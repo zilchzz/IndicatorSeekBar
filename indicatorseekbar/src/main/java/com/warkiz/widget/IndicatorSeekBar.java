@@ -88,6 +88,7 @@ public class IndicatorSeekBar extends View {
     private boolean mShowBothTickTextsOnly;//show the tick texts on the both ends of seek bar before.
     private int mTickTextsHeight;//the height of text
     private String[] mTickTextsArr;//save the tick texts which at tickMark position.
+    private String[] mUserTickTextsArr;//tick text array set by user
     private float[] mTickTextsWidth;//save the tick texts width bounds.
     private float[] mTextCenterX;//the text's drawing X anchor
     private float mTickTextY;//the text's drawing Y anchor
@@ -445,12 +446,27 @@ public class IndicatorSeekBar extends View {
         }
     }
 
-    private String getTickTextByPosition(int index) {
-        if (mTickTextsCustomArray == null) {
-            return getProgressString(mProgressArr[index]);
+    /**
+     * init the tick text array, then length of it must equal with tick count
+     *
+     * @param userTickTextsArr tick text set by user
+     */
+    public void initUserTickText(String[] userTickTextsArr) {
+        if (userTickTextsArr.length == getTickCount()) {
+            this.mUserTickTextsArr = userTickTextsArr;
         }
-        if (index < mTickTextsCustomArray.length) {
-            return String.valueOf(mTickTextsCustomArray[index]);
+    }
+
+    private String getTickTextByPosition(int index) {
+        if (mUserTickTextsArr != null && mUserTickTextsArr.length > index) {
+            return mUserTickTextsArr[index];
+        } else {
+            if (mTickTextsCustomArray == null) {
+                return getProgressString(mProgressArr[index]);
+            }
+            if (index < mTickTextsCustomArray.length) {
+                return String.valueOf(mTickTextsCustomArray[index]);
+            }
         }
         return "";
     }
